@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "catgen"
+version = "0.1.0"
+description = "Simulation and analysis of high-dimensional categorical data, with a focus on SNP genetics"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+  { name = "catgen contributors" }
+]
+keywords = [
+  "SNP",
+  "genetics",
+  "simulation",
+  "categorical data",
+  "Hardy-Weinberg",
+  "logistic regression",
+  "high-dimensional data",
+  "scrime",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+  "numpy>=1.23",
+]
+
+[project.urls]
+Homepage = "https://github.com/Italbytz/pypi-catgen"
+Source = "https://github.com/Italbytz/pypi-catgen"
+"Bug Tracker" = "https://github.com/Italbytz/pypi-catgen/issues"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
