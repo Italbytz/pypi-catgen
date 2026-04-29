@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "catgen"
 version = "0.1.0"
-description = "Simulation and analysis of high-dimensional categorical data, with a focus on SNP genetics"
+description = "Categorical data generator for ML benchmarks: SNP genetics, k-multiplexer, DNF concepts, epistasis, geometric boundaries, and more"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -21,6 +21,13 @@ keywords = [
   "logistic regression",
   "high-dimensional data",
   "scrime",
+  "multiplexer",
+  "boolean concepts",
+  "benchmark datasets",
+  "epistasis",
+  "DNF",
+  "machine learning",
+  "synthetic data",
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -44,8 +51,12 @@ Source = "https://github.com/Italbytz/pypi-catgen"
 "Bug Tracker" = "https://github.com/Italbytz/pypi-catgen/issues"
 
 [project.optional-dependencies]
+biomedical = [
+  "scikit-learn>=1.2",
+]
 dev = [
   "pytest>=7.4",
+  "scikit-learn>=1.2",
 ]
 
 [tool.setuptools]
