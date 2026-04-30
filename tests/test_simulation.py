@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from catgen import SimSNPGlm, simulate_snp_glm
+from catgen import SimSNPGlm, SimSNPCovariateGlm, simulate_snp_glm, simulate_snp_glm_with_covariates
 
 
 # ---------------------------------------------------------------------------
@@ -49,6 +49,21 @@ def test_maf_per_snp_array():
     maf_vec = np.linspace(0.05, 0.45, 10)
     result = simulate_snp_glm(n_obs=300, n_snp=10, maf=maf_vec, random_state=2)
     np.testing.assert_array_equal(result.maf, maf_vec)
+
+
+def test_maf_tuple_for_two_snps_is_treated_as_range():
+    result = simulate_snp_glm(
+        n_obs=200,
+        n_snp=2,
+        maf=(0.1, 0.4),
+        list_ia=[[1]],
+        list_snp=[[1]],
+        random_state=21,
+    )
+    assert result.maf.shape == (2,)
+    assert np.all(result.maf >= 0.1)
+    assert np.all(result.maf <= 0.4)
+    assert not np.array_equal(result.maf, np.array([0.1, 0.4]))
 
 
 def test_maf_invalid_raises():
@@ -111,11 +126,64 @@ def test_list_ia_without_list_snp():
     assert "SNP3==3" in result.ia[1]
 
 
+def test_scrime_style_mixed_terms_are_supported():
+    result = simulate_snp_glm(
+        n_obs=250,
+        n_snp=10,
+        list_ia=[-1, -1, -1, [-1, -1]],
+        list_snp=[1, 2, 3, [4, 5]],
+        beta=[0.2, 0.2, 0.2, 0.5],
+        random_state=7,
+    )
+    assert len(result.ia) == 4
+    assert result.ia[0] == "SNP1!=1"
+    assert result.ia[1] == "SNP2!=1"
+    assert result.ia[2] == "SNP3!=1"
+    assert result.ia[3] == "SNP4!=1 & SNP5!=1"
+
+
+def test_scalar_terms_without_explicit_snp_are_supported():
+    result = simulate_snp_glm(
+        n_obs=200,
+        n_snp=10,
+        list_ia=[-1, -1, 3],
+        random_state=8,
+    )
+    assert result.ia == ["SNP1!=1", "SNP2!=1", "SNP3==3"]
+
+
+def test_mismatched_term_shapes_raise():
+    with pytest.raises(ValueError, match="same number of entries"):
+        simulate_snp_glm(
+            n_obs=100,
+            n_snp=10,
+            list_ia=[[-1, -1]],
+            list_snp=[[1]],
+            random_state=9,
+        )
+
+
 def test_default_ia_names():
     """Default interactions must match Nunkesser et al. 2007 / scrime default."""
     result = simulate_snp_glm(n_obs=100, n_snp=15, random_state=0)
     assert result.ia[0] == "SNP6!=1 & SNP7==1"
     assert result.ia[1] == "SNP3==1 & SNP9==1 & SNP10==1"
+
+
+def test_default_terms_require_at_least_ten_snps():
+    with pytest.raises(ValueError, match="require n_snp >= 10"):
+        simulate_snp_glm(n_obs=100, n_snp=8, random_state=22)
+
+
+def test_out_of_range_snp_indices_raise_clear_error():
+    with pytest.raises(ValueError, match="references SNP6"):
+        simulate_snp_glm(
+            n_obs=100,
+            n_snp=5,
+            list_ia=[[-1]],
+            list_snp=[[6]],
+            random_state=23,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -136,6 +204,72 @@ def test_prob_in_unit_interval():
     result = simulate_snp_glm(n_obs=300, n_snp=15, random_state=6)
     assert result.prob is not None
     assert np.all((result.prob >= 0.0) & (result.prob <= 1.0))
+
+
+def test_covariates_are_sampled_from_multivariate_normal():
+    result = simulate_snp_glm_with_covariates(
+        n_obs=120,
+        n_snp=8,
+        covariate_mean=[0.0, 1.0],
+        covariate_cov=[[1.0, 0.5], [0.5, 2.0]],
+        covariate_beta=[0.3, -0.2],
+        sample_y=False,
+        random_state=10,
+    )
+    assert result.covariates.shape == (120, 2)
+    assert result.covariate_names == ["E1", "E2"]
+    np.testing.assert_array_equal(result.covariate_beta, [0.3, -0.2])
+
+
+def test_covariate_main_effect_changes_probability_deterministically():
+    covariates = np.array([[0.0], [1.0], [2.0]])
+    result = simulate_snp_glm_with_covariates(
+        n_obs=3,
+        n_snp=2,
+        beta0=0.0,
+        beta=0.0,
+        covariates=covariates,
+        covariate_beta=[1.0],
+        sample_y=False,
+        random_state=11,
+    )
+    expected = 1.0 / (1.0 + np.exp(-covariates[:, 0]))
+    np.testing.assert_allclose(result.prob, expected)
+
+
+def test_covariate_snp_interaction_changes_probability():
+    covariates = np.ones((6, 1), dtype=float)
+    result = simulate_snp_glm_with_covariates(
+        n_obs=6,
+        n_snp=1,
+        list_ia=[1],
+        beta0=0.0,
+        beta=0.0,
+        covariates=covariates,
+        covariate_interaction_ia=[-1],
+        covariate_interaction_snp=[1],
+        covariate_interaction_index=[1],
+        covariate_interaction_beta=[2.0],
+        sample_y=False,
+        random_state=12,
+    )
+    indicator = (result.x[:, 0] != 0).astype(float)
+    expected = 1.0 / (1.0 + np.exp(-(2.0 * indicator)))
+    np.testing.assert_allclose(result.prob, expected)
+    assert result.covariate_interactions == ["E1 * SNP1!=1"]
+
+
+def test_covariate_interaction_requires_matching_covariate_index():
+    with pytest.raises(ValueError, match="covariate_interaction_index"):
+        simulate_snp_glm_with_covariates(
+            n_obs=10,
+            n_snp=5,
+            covariate_mean=[0.0, 0.0],
+            covariate_interaction_ia=[[-1], [-1]],
+            covariate_interaction_snp=[[1], [2]],
+            covariate_interaction_index=[1],
+            random_state=13,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -170,3 +304,14 @@ def test_return_type():
     assert isinstance(result.beta, np.ndarray)
     assert isinstance(result.maf, np.ndarray)
     assert isinstance(result.ia, list)
+
+
+def test_covariate_return_type():
+    result = simulate_snp_glm_with_covariates(
+        n_obs=40,
+        n_snp=6,
+        covariate_mean=[0.0, 0.0],
+        random_state=14,
+    )
+    assert isinstance(result, SimSNPCovariateGlm)
+    assert result.covariates.shape == (40, 2)

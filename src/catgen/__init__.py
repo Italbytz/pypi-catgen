@@ -4,7 +4,12 @@ Includes SNP genetics simulation, k-multiplexer boolean datasets, DNF
 concepts, MONK benchmarks, epistasis, geometric boundaries, and more.
 """
 
-from catgen.simulation.snp import SimSNPGlm, simulate_snp_glm
+from catgen.simulation.snp import (
+    SimSNPGlm,
+    SimSNPCovariateGlm,
+    simulate_snp_glm,
+    simulate_snp_glm_with_covariates,
+)
 from catgen.datasets import (
     generate_multiplexer_dataset,
     load_multiplexer_datasets,
@@ -29,7 +34,9 @@ from catgen.datasets import (
 
 __all__ = [
     "SimSNPGlm",
+    "SimSNPCovariateGlm",
     "simulate_snp_glm",
+    "simulate_snp_glm_with_covariates",
     "generate_multiplexer_dataset",
     "load_multiplexer_datasets",
     "generate_xor_parity_dataset",

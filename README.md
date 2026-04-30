@@ -40,6 +40,48 @@ sim2 = simulate_snp_glm(
 )
 ```
 
+Use scrime-style mixed terms when you want to combine main effects and
+interaction effects in one model specification:
+
+```python
+from catgen import simulate_snp_glm
+
+sim3 = simulate_snp_glm(
+    n_obs=2000,
+    n_snp=50,
+    list_ia=[-1, -1, -1, [-1, -1]],
+    list_snp=[1, 2, 3, [4, 5]],
+    beta0=0.0,
+    beta=[0.2, 0.2, 0.2, 0.5],
+    maf=(0.15, 0.45),
+    random_state=1,
+  )
+```
+
+Add continuous covariates and SNP-covariate interaction terms when you want to
+mirror environmental simulation scenarios:
+
+```python
+from catgen import simulate_snp_glm_with_covariates
+
+sim4 = simulate_snp_glm_with_covariates(
+    n_obs=2000,
+    n_snp=50,
+    list_ia=[-1, -1, -1, [-1, -1]],
+    list_snp=[1, 2, 3, [1, 4]],
+    beta0=0.0,
+    beta=[0.2, 0.3, 0.4, 0.6],
+    covariate_mean=[20.0, 20.0],
+    covariate_cov=[[10.0, 5.0], [5.0, 10.0]],
+    covariate_beta=[0.2, 0.0],
+    covariate_interaction_ia=[-1],
+    covariate_interaction_snp=[2],
+    covariate_interaction_index=[2],
+    covariate_interaction_beta=[0.8],
+    random_state=1,
+)
+```
+
 ## API
 
 ### `simulate_snp_glm`
@@ -68,14 +110,17 @@ response via a logistic regression model.
 |-----------|-------------|
 | `n_obs` | Number of observations. |
 | `n_snp` | Number of SNPs to simulate. |
-| `list_ia` | Interaction specification (scrime coding: 1=AA, 2=Aa, 3=aa; negative = NOT). |
-| `list_snp` | 1-based SNP indices for each interaction. |
+| `list_ia` | Term specification in scrime coding: each term may be a scalar main effect or an array-like interaction term; 1=AA, 2=Aa, 3=aa, negative = NOT. |
+| `list_snp` | 1-based SNP indices for each term; each entry may be a scalar or an array-like matching the corresponding `list_ia` term. |
 | `beta0` | Logistic model intercept. |
 | `beta` | Regression coefficient(s) for each interaction term. |
-| `maf` | Minor allele frequency: scalar, `(min, max)` tuple, or per-SNP array. |
+| `maf` | Minor allele frequency: scalar, `(min, max)` tuple, or per-SNP list/NumPy array. A tuple is always interpreted as a sampling range. |
 | `sample_y` | Sample y from Bernoulli(prob) if True; threshold by `p_cutoff` if False. |
 | `p_cutoff` | Probability cutoff when `sample_y=False`. |
 | `random_state` | Integer seed for reproducibility. |
+
+If you rely on the historical scrime default interaction terms, `n_snp` must be at
+least 10. For smaller SNP panels, pass explicit `list_ia` and `list_snp` values.
 
 **Returns** `SimSNPGlm` with fields:
 
@@ -88,6 +133,58 @@ response via a logistic regression model.
 | `ia` | List of interaction description strings. |
 | `maf` | `(n_snp,)` array of minor allele frequencies. |
 | `prob` | `(n_obs,)` predicted case probabilities. |
+
+### `simulate_snp_glm_with_covariates`
+
+```python
+simulate_snp_glm_with_covariates(
+  n_obs=1000,
+  n_snp=50,
+  list_ia=None,
+  list_snp=None,
+  beta0=-0.5,
+  beta=1.5,
+  maf=0.25,
+  covariates=None,
+  covariate_mean=None,
+  covariate_cov=None,
+  covariate_beta=None,
+  covariate_interaction_ia=None,
+  covariate_interaction_snp=None,
+  covariate_interaction_index=None,
+  covariate_interaction_beta=None,
+  sample_y=True,
+  p_cutoff=0.5,
+  random_state=None,
+) -> SimSNPCovariateGlm
+```
+
+Extends the SNP logistic model with continuous covariates. Covariates can be
+passed explicitly via `covariates` or sampled from a multivariate normal using
+`covariate_mean` and `covariate_cov`.
+
+**Additional parameters**
+
+| Parameter | Description |
+|-----------|-------------|
+| `covariates` | Explicit `(n_obs, n_covariates)` covariate matrix. If provided, no Gaussian sampling is performed. |
+| `covariate_mean` | Mean vector for Gaussian covariate sampling. A scalar creates one covariate. |
+| `covariate_cov` | Covariance specification for covariate sampling: scalar variance, per-covariate variance vector, or full covariance matrix. |
+| `covariate_beta` | Additive coefficient(s) for the continuous covariates. Defaults to zero when omitted. |
+| `covariate_interaction_ia` | scrime-style SNP term specification for SNP-covariate interactions. |
+| `covariate_interaction_snp` | 1-based SNP indices for `covariate_interaction_ia`. |
+| `covariate_interaction_index` | 1-based covariate index for each SNP-covariate interaction term. |
+| `covariate_interaction_beta` | Coefficient(s) for the SNP-covariate interaction terms. Defaults to zero when omitted. |
+
+**Additional return fields**
+
+| Field | Description |
+|-------|-------------|
+| `covariates` | `(n_obs, n_covariates)` continuous covariate matrix. |
+| `covariate_beta` | Additive covariate coefficients used in the model. |
+| `covariate_names` | Generated covariate names such as `E1`, `E2`, ... |
+| `covariate_interaction_beta` | Coefficients for SNP-covariate interaction terms. |
+| `covariate_interactions` | Human-readable names for SNP-covariate interaction terms. |
 
 ### Genotype coding
 
