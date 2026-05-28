@@ -82,6 +82,35 @@ sim4 = simulate_snp_glm_with_covariates(
 )
 ```
 
+Use the classic AIMA restaurant example in three modes:
+
+```python
+from catgen import (
+  load_restaurant_aima12_dataset,
+  generate_restaurant_full_observation_space,
+  sample_restaurant_observations,
+  restaurant_classification_metrics,
+)
+
+# Canonical 12 observations from AIMA
+X12, y12 = load_restaurant_aima12_dataset(encode=False)
+
+# Full observation space (all combinations): 9216 rows
+X_all, y_all = generate_restaurant_full_observation_space(encode=True)
+print(X_all.shape)  # (9216, 10)
+
+# Random draw of any number of observations
+X_sample, y_sample = sample_restaurant_observations(
+  n_samples=200,
+  source="full",
+  random_state=42,
+)
+
+# Metrics on all 9216 observations (y_true defaults to full space)
+metrics = restaurant_classification_metrics(y_all)
+print(metrics["accuracy"])  # 1.0
+```
+
 ## API
 
 ### `simulate_snp_glm`
