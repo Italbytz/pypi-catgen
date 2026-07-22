@@ -47,8 +47,10 @@ def generate_epistasis_dataset(
     y : np.ndarray, shape (n_samples,), dtype int  (0 or 1)
     """
     rng = np.random.default_rng(random_state)
-    assert n_interacting <= n_snps, "n_interacting must not exceed n_snps"
-    assert 0 < minor_allele_freq < 0.5, "minor_allele_freq must be in (0, 0.5)"
+    if n_interacting > n_snps:
+        raise ValueError("n_interacting must not exceed n_snps")
+    if not (0 < minor_allele_freq < 0.5):
+        raise ValueError("minor_allele_freq must be in (0, 0.5)")
 
     p = minor_allele_freq
     hw_probs = [(1 - p) ** 2, 2 * p * (1 - p), p ** 2]
