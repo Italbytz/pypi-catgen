@@ -1,8 +1,8 @@
 # catgen
 
-**catgen** is a Python library for simulation and analysis of high-dimensional categorical data, with a primary focus on SNP (Single Nucleotide Polymorphism) genotype data.
+**catgen** is a Python library for generating synthetic datasets for machine learning benchmarks, with a focus on categorical and high-dimensional data.
 
-It is a Python port of the R package [scrime](https://cran.r-project.org/package=scrime) (Schwender, 2007), focused initially on the simulation functions used in genetic association studies.
+The SNP simulation functions (`simulate_snp_glm`, `simulate_snp_glm_with_covariates`) are a Python port of the R package [scrime](https://cran.r-project.org/package=scrime) (Schwender, 2007). All other dataset generators (k-multiplexer, DNF concepts, geometric boundaries, etc.) are independent implementations.
 
 ## Installation
 

@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Package is alpha (0.1.0) and may see API changes
 - Primary use case: machine learning benchmark dataset generation
-- Ported from R package [scrime](https://cran.r-project.org/package=scrime) (Schwender, 2007)
+- SNP simulation functions ported from R package [scrime](https://cran.r-project.org/package=scrime) (Schwender, 2007); all other generators are independent implementations
 - See README.md for detailed usage examples and API documentation
 
 ---
