@@ -5,6 +5,8 @@ concepts, MONK benchmarks, restaurant examples, epistasis, geometric
 boundaries, and more.
 """
 
+__version__ = "0.1.0"
+
 from catgen.simulation.snp import (
     SimSNPGlm,
     SimSNPCovariateGlm,
@@ -42,6 +44,7 @@ from catgen.datasets import (
 )
 
 __all__ = [
+    "__version__",
     "SimSNPGlm",
     "SimSNPCovariateGlm",
     "simulate_snp_glm",
