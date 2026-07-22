@@ -7,42 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+(No unreleased changes yet.)
 
-- **Restaurant dataset extracted** → moved to `artifacts/datasets/aima-restaurant/` for independent maintenance
-  - AIMA teaching example now separate from SNP genetics focus
-  - Used by `ml-toolchains` and `python-recipes` education modules
-  - Cleaner catgen package scope
+## [0.1.0] – 2026-04-29
 
 ### Added
 
 - **SNP Dataset Generators** (unified `(X, y)` interface)
   - `generate_snp_glm_dataset()`: Wrapper around `simulate_snp_glm()`
   - `generate_snp_glm_with_covariates_dataset()`: Wrapper with covariates
-  - Consistent with other dataset generators (all return `(X, y)` tuples)
+  - Consistent interface with all other dataset generators (return `(X, y)` tuples)
   - Low-level `simulate_snp_glm*()` functions still available for detailed metadata
 
-### Removed
-
-- Restaurant functions from catgen (moved to independent module)
-  - `load_restaurant_aima12_dataset()`
-  - `generate_restaurant_full_observation_space()`
-  - `sample_restaurant_observations()`
-  - `restaurant_classification_metrics()`
-  - `restaurant_decision_rule()`
-  - `RESTAURANT_*` constants
-  - `tests/test_restaurant_dataset.py`
-
-## [0.1.0] – 2026-04-29
-
-### Added
-
-- **SNP Genetics Simulation**
-  - `simulate_snp_glm()`: Simulate binary response under Hardy-Weinberg equilibrium
-  - `simulate_snp_glm_with_covariates()`: Include continuous covariates and SNP-covariate interactions
-  - `SimSNPGlm` and `SimSNPCovariateGlm` dataclass results with detailed metadata
-
-- **Boolean Concept Generators**
+- **SNP Genetics Simulation** (low-level API)
   - `generate_xor_parity_dataset()`: XOR and k-bit parity functions
   - `generate_dnf_concept_dataset()`: Disjunctive normal form (DNF) expressions
   - `generate_monk1_dataset()`, `generate_monk3_dataset()`: MONK classification benchmarks
