@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Low-level `simulate_snp_glm*()` functions still available for detailed metadata
 
 - **SNP Genetics Simulation** (low-level API)
+  - `simulate_snp_glm()`: Core SNP simulation with Hardy-Weinberg equilibrium and logistic regression disease model
+  - `simulate_snp_glm_with_covariates()`: SNP simulation with continuous covariates and SNP-covariate interactions
+  - `SimSNPGlm` dataclass: Returns genotype matrix, binary response, coefficients, interaction descriptions, and MAF array
+
+- **Boolean Concept Generators**
   - `generate_xor_parity_dataset()`: XOR and k-bit parity functions
   - `generate_dnf_concept_dataset()`: Disjunctive normal form (DNF) expressions
   - `generate_monk1_dataset()`, `generate_monk3_dataset()`: MONK classification benchmarks
