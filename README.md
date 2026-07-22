@@ -82,36 +82,87 @@ sim4 = simulate_snp_glm_with_covariates(
 )
 ```
 
-Use the classic AIMA restaurant example in three modes:
+Generate SNP data with a unified `(X, y)` interface for benchmarking:
 
 ```python
-from catgen import (
-  load_restaurant_aima12_dataset,
-  generate_restaurant_full_observation_space,
-  sample_restaurant_observations,
-  restaurant_classification_metrics,
+from catgen import generate_snp_glm_dataset, generate_snp_glm_with_covariates_dataset
+
+# Generate SNP data (returns X, y tuple like other dataset generators)
+X, y = generate_snp_glm_dataset(n_obs=1000, n_snp=50, random_state=42)
+print(X.shape)  # (1000, 50)
+print(y.shape)  # (1000,)
+
+# With covariates: returns combined feature matrix (SNPs + covariates)
+X_cov, y_cov = generate_snp_glm_with_covariates_dataset(
+    n_obs=1000,
+    n_snp=50,
+    n_covariates=3,
+    random_state=42,
 )
+print(X_cov.shape)  # (1000, 53) – 50 SNPs + 3 covariates
 
-# Canonical 12 observations from AIMA
-X12, y12 = load_restaurant_aima12_dataset(encode=False)
-
-# Full observation space (all combinations): 9216 rows
-X_all, y_all = generate_restaurant_full_observation_space(encode=True)
-print(X_all.shape)  # (9216, 10)
-
-# Random draw of any number of observations
-X_sample, y_sample = sample_restaurant_observations(
-  n_samples=200,
-  source="full",
-  random_state=42,
-)
-
-# Metrics on all 9216 observations (y_true defaults to full space)
-metrics = restaurant_classification_metrics(y_all)
-print(metrics["accuracy"])  # 1.0
+# For full simulation details and metadata, use low-level functions:
+from catgen import simulate_snp_glm
+sim = simulate_snp_glm(n_obs=1000, n_snp=50, random_state=42)
+print(sim.ia)    # interaction descriptions
+print(sim.maf)   # minor allele frequencies
 ```
 
-## API
+## Dataset Generators
+
+All generators return `(X, y)` tuples of NumPy arrays with optional `random_state` for reproducibility.
+
+### SNP/Genetics Generators
+
+#### `generate_snp_glm_dataset` (unified interface)
+
+```python
+generate_snp_glm_dataset(
+    n_obs=1000,
+    n_snp=50,
+    list_ia=None,
+    list_snp=None,
+    beta0=-0.5,
+    beta=1.5,
+    maf=0.25,
+    sample_y=True,
+    p_cutoff=0.5,
+    random_state=None,
+) -> tuple[np.ndarray, np.ndarray]
+```
+
+Wrapper around `simulate_snp_glm()` with standard `(X, y)` output.
+For full simulation metadata, use `simulate_snp_glm()` directly.
+
+#### `generate_snp_glm_with_covariates_dataset` (unified interface)
+
+```python
+generate_snp_glm_with_covariates_dataset(
+    n_obs=1000,
+    n_snp=50,
+    n_covariates=2,
+    list_ia=None,
+    list_snp=None,
+    ...
+    random_state=None,
+) -> tuple[np.ndarray, np.ndarray]
+```
+
+Wrapper with continuous covariates. Returns combined `(X_combined, y)` where
+X_combined has shape `(n_obs, n_snp + n_covariates)`.
+
+### Boolean & Geometric Generators
+
+- `generate_xor_parity_dataset()`, `generate_dnf_concept_dataset()`
+- `generate_monk1_dataset()`, `generate_monk3_dataset()`
+- `generate_checkerboard_dataset()`, `generate_circle_boundary_dataset()`
+- `generate_spiral_dataset()`, `generate_concentric_rings_dataset()`
+- `generate_multiplexer_dataset()`, `load_multiplexer_datasets()`
+- and more...
+
+All follow the same `(X, y)` convention.
+
+## Low-Level SNP Simulation API
 
 ### `simulate_snp_glm`
 

@@ -65,6 +65,15 @@ pytest tests/ --cov=catgen --cov-report=html
 
 ### Example: Adding a New Dataset Generator
 
+**Dataset generators** in catgen should follow this pattern:
+- Return `(X, y)` tuples with NumPy arrays
+- Accept `random_state` for reproducibility
+- Located in `src/catgen/datasets/` submodules
+
+For **SNP simulation**, use existing high-level wrappers (`generate_snp_glm_dataset()`).
+If you need low-level simulation metadata (interaction descriptions, MAF, probabilities),
+use `simulate_snp_glm()` directly from `catgen.simulation.snp` module.
+
 1. **Implement in appropriate submodule** (e.g., `src/catgen/datasets/boolean_concepts.py`):
    ```python
    def generate_my_dataset(n_obs: int, n_features: int, random_state=None) -> Tuple[np.ndarray, np.ndarray]:

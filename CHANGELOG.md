@@ -7,7 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-(No unreleased changes yet.)
+### Changed
+
+- **Restaurant dataset extracted** → moved to `artifacts/datasets/aima-restaurant/` for independent maintenance
+  - AIMA teaching example now separate from SNP genetics focus
+  - Used by `ml-toolchains` and `python-recipes` education modules
+  - Cleaner catgen package scope
+
+### Added
+
+- **SNP Dataset Generators** (unified `(X, y)` interface)
+  - `generate_snp_glm_dataset()`: Wrapper around `simulate_snp_glm()`
+  - `generate_snp_glm_with_covariates_dataset()`: Wrapper with covariates
+  - Consistent with other dataset generators (all return `(X, y)` tuples)
+  - Low-level `simulate_snp_glm*()` functions still available for detailed metadata
+
+### Removed
+
+- Restaurant functions from catgen (moved to independent module)
+  - `load_restaurant_aima12_dataset()`
+  - `generate_restaurant_full_observation_space()`
+  - `sample_restaurant_observations()`
+  - `restaurant_classification_metrics()`
+  - `restaurant_decision_rule()`
+  - `RESTAURANT_*` constants
+  - `tests/test_restaurant_dataset.py`
 
 ## [0.1.0] – 2026-04-29
 
@@ -42,20 +66,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `generate_sequential_threshold_dataset()`: Sequential threshold rules
   - `generate_hierarchical_interaction_dataset()`: Nested interaction structures
 
-- **Restaurant Decision Example (AIMA)**
-  - `load_restaurant_aima12_dataset()`: Canonical 12-observation dataset from AIMA
-  - `generate_restaurant_full_observation_space()`: Complete enumeration of all valid combinations
-  - `sample_restaurant_observations()`: Bootstrap sampling with replacement
-  - `restaurant_classification_metrics()`: Accuracy, precision, recall, F1 computation
-  - `restaurant_decision_rule()`: Explicit rule-based decision logic
-
 - **k-Multiplexer Datasets**
   - `generate_multiplexer_dataset()`: k-multiplexer boolean function
   - `load_multiplexer_datasets()`: Predefined multiplexer (3x8, 4x16, 5x32)
 
 - **Unit Tests** (~360 lines)
   - `test_simulation.py`: SNP simulation shape, value ranges, MAF variants, interaction patterns
-  - `test_restaurant_dataset.py`: AIMA dataset loading and restaurant decision logic
+  - `test_dataset_generators.py`: 40+ tests for boolean, geometric, biomedical, structured generators with edge cases
 
 ### Changed
 
