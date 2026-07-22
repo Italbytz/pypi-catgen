@@ -14,7 +14,6 @@ from catgen.simulation.snp import (
 )
 from catgen.datasets import (
     generate_multiplexer_dataset,
-    load_multiplexer_datasets,
     generate_xor_parity_dataset,
     generate_dnf_concept_dataset,
     generate_monk1_dataset,
@@ -43,7 +42,6 @@ __all__ = [
     "simulate_snp_glm",
     "simulate_snp_glm_with_covariates",
     "generate_multiplexer_dataset",
-    "load_multiplexer_datasets",
     "generate_xor_parity_dataset",
     "generate_dnf_concept_dataset",
     "generate_monk1_dataset",

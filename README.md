@@ -157,7 +157,7 @@ X_combined has shape `(n_obs, n_snp + n_covariates)`.
 - `generate_monk1_dataset()`, `generate_monk3_dataset()`
 - `generate_checkerboard_dataset()`, `generate_circle_boundary_dataset()`
 - `generate_spiral_dataset()`, `generate_concentric_rings_dataset()`
-- `generate_multiplexer_dataset()`, `load_multiplexer_datasets()`
+- `generate_multiplexer_dataset(n_address_bits, max_samples=None)`
 - and more...
 
 All follow the same `(X, y)` convention.

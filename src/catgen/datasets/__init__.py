@@ -19,10 +19,7 @@ snp_generators
     SNP dataset generators with unified (X, y) interface.
 """
 
-from catgen.datasets.multiplexer import (
-    generate_multiplexer_dataset,
-    load_multiplexer_datasets,
-)
+from catgen.datasets.multiplexer import generate_multiplexer_dataset
 from catgen.datasets.boolean_concepts import (
     generate_xor_parity_dataset,
     generate_dnf_concept_dataset,
@@ -56,7 +53,6 @@ from catgen.datasets.snp_generators import (
 __all__ = [
     # multiplexer
     "generate_multiplexer_dataset",
-    "load_multiplexer_datasets",
     # boolean concepts
     "generate_xor_parity_dataset",
     "generate_dnf_concept_dataset",

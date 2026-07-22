@@ -12,13 +12,6 @@ from __future__ import annotations
 
 import numpy as np
 
-# Standard configurations: name -> number of address bits.
-_MUX_CONFIGS: tuple[tuple[str, int], ...] = (
-    ("mux_6", 2),     # 2 address bits + 4 data bits  = 6 features, 2^6  = 64 instances
-    ("mux_11", 3),    # 3 address bits + 8 data bits  = 11 features, 2^11 = 2048 instances
-    ("mux_20", 4),    # 4 address bits + 16 data bits = 20 features, 2^20 = 1_048_576 instances
-)
-
 
 def generate_multiplexer_dataset(
     n_address_bits: int,
@@ -73,35 +66,3 @@ def generate_multiplexer_dataset(
         y[row] = bits[n_address_bits + address]
 
     return X, y
-
-
-def load_multiplexer_datasets(
-    *,
-    max_samples_large: int = 10_000,
-) -> dict[str, tuple[np.ndarray, np.ndarray]]:
-    """Generate standard multiplexer datasets (mux_6 to mux_20).
-
-    For large multiplexers (>= 2^16 instances), sampling is used to keep
-    runtime manageable.
-
-    Parameters
-    ----------
-    max_samples_large : int
-        Maximum row count for large multiplexers (default: 10_000).
-
-    Returns
-    -------
-    dict mapping ``name`` -> ``(X, y)`` tuples.
-    """
-    result: dict[str, tuple[np.ndarray, np.ndarray]] = {}
-    for name, n_addr in _MUX_CONFIGS:
-        n_features = n_addr + (1 << n_addr)
-        n_total = 1 << n_features
-        if n_total > max_samples_large:
-            X, y = generate_multiplexer_dataset(
-                n_addr, max_samples=max_samples_large, random_state=42
-            )
-        else:
-            X, y = generate_multiplexer_dataset(n_addr)
-        result[name] = (X, y)
-    return result

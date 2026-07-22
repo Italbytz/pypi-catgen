@@ -49,8 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `generate_hierarchical_interaction_dataset()`: Nested interaction structures
 
 - **k-Multiplexer Datasets**
-  - `generate_multiplexer_dataset()`: k-multiplexer boolean function
-  - `load_multiplexer_datasets()`: Predefined multiplexer (3x8, 4x16, 5x32)
+  - `generate_multiplexer_dataset(n_address_bits, max_samples=None)`: k-multiplexer boolean function
 
 - **Unit Tests** (~360 lines)
   - `test_simulation.py`: SNP simulation shape, value ranges, MAF variants, interaction patterns
