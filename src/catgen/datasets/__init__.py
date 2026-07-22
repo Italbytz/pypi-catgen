@@ -15,8 +15,8 @@ geometric
     Checkerboard, circle/spiral/ring boundaries.
 structured
     Modular sum, deep tree, sequential thresholds, hierarchical interactions.
-restaurant
-    AIMA restaurant examples, full observation space, and sampling.
+snp_generators
+    SNP dataset generators with unified (X, y) interface.
 """
 
 from catgen.datasets.multiplexer import (
@@ -48,15 +48,9 @@ from catgen.datasets.structured import (
     generate_sequential_threshold_dataset,
     generate_hierarchical_interaction_dataset,
 )
-from catgen.datasets.restaurant import (
-    RESTAURANT_AIMA12_EXAMPLES,
-    RESTAURANT_FEATURE_NAMES,
-    RESTAURANT_FEATURE_DOMAINS,
-    restaurant_decision_rule,
-    load_restaurant_aima12_dataset,
-    generate_restaurant_full_observation_space,
-    sample_restaurant_observations,
-    restaurant_classification_metrics,
+from catgen.datasets.snp_generators import (
+    generate_snp_glm_dataset,
+    generate_snp_glm_with_covariates_dataset,
 )
 
 __all__ = [
@@ -84,13 +78,7 @@ __all__ = [
     "generate_deep_tree_dataset",
     "generate_sequential_threshold_dataset",
     "generate_hierarchical_interaction_dataset",
-    # restaurant
-    "RESTAURANT_AIMA12_EXAMPLES",
-    "RESTAURANT_FEATURE_NAMES",
-    "RESTAURANT_FEATURE_DOMAINS",
-    "restaurant_decision_rule",
-    "load_restaurant_aima12_dataset",
-    "generate_restaurant_full_observation_space",
-    "sample_restaurant_observations",
-    "restaurant_classification_metrics",
+    # snp_generators
+    "generate_snp_glm_dataset",
+    "generate_snp_glm_with_covariates_dataset",
 ]

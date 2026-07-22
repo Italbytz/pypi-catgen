@@ -1,8 +1,7 @@
 """catgen – Categorical data generator for machine learning benchmarks.
 
 Includes SNP genetics simulation, k-multiplexer boolean datasets, DNF
-concepts, MONK benchmarks, restaurant examples, epistasis, geometric
-boundaries, and more.
+concepts, MONK benchmarks, epistasis, geometric boundaries, and more.
 """
 
 __version__ = "0.1.0"
@@ -33,14 +32,8 @@ from catgen.datasets import (
     generate_deep_tree_dataset,
     generate_sequential_threshold_dataset,
     generate_hierarchical_interaction_dataset,
-    RESTAURANT_AIMA12_EXAMPLES,
-    RESTAURANT_FEATURE_NAMES,
-    RESTAURANT_FEATURE_DOMAINS,
-    restaurant_decision_rule,
-    load_restaurant_aima12_dataset,
-    generate_restaurant_full_observation_space,
-    sample_restaurant_observations,
-    restaurant_classification_metrics,
+    generate_snp_glm_dataset,
+    generate_snp_glm_with_covariates_dataset,
 )
 
 __all__ = [
@@ -68,12 +61,6 @@ __all__ = [
     "generate_deep_tree_dataset",
     "generate_sequential_threshold_dataset",
     "generate_hierarchical_interaction_dataset",
-    "RESTAURANT_AIMA12_EXAMPLES",
-    "RESTAURANT_FEATURE_NAMES",
-    "RESTAURANT_FEATURE_DOMAINS",
-    "restaurant_decision_rule",
-    "load_restaurant_aima12_dataset",
-    "generate_restaurant_full_observation_space",
-    "sample_restaurant_observations",
-    "restaurant_classification_metrics",
+    "generate_snp_glm_dataset",
+    "generate_snp_glm_with_covariates_dataset",
 ]
