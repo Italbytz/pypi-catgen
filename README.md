@@ -248,7 +248,6 @@ where each $L_k$ is a Boolean interaction term.
 - Nunkesser, R., Bernholt, T., Schwender, H., Ickstadt, K. and Wegener, I. (2007).
   Detecting High-Order Interactions of Single Nucleotide Polymorphisms Using Genetic
   Programming. *Bioinformatics*, 23, 3280–3288.
-- Koza, J. R. (1992). *Genetic Programming.* MIT Press.
 
 ## License
 
